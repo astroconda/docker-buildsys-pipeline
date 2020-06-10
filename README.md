@@ -9,7 +9,7 @@ $ ./build [TAG] [Pipeline_snapshot_URL]
 
 i.e.
 ```
-$ ./build CALDP-atodsat-rc1 https://ssb.stsci.edu/astroconda-releases/caldp/20200421/latest-linux.yml
+$ ./build CALDP-20200421 https://ssb.stsci.edu/astroconda-releases/caldp/20200421/latest-linux.yml
 
 ```
 
