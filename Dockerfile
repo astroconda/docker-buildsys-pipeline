@@ -1,4 +1,4 @@
-FROM centos:6.9
+FROM centos:7
 
 # Declare build-time environment
 
@@ -7,16 +7,15 @@ ARG MC_BASE_PYTHON=py37
 ARG MC_VERSION=4.8.2
 ARG MC_PLATFORM=Linux
 ARG MC_ARCH=x86_64
-ARG MC_URL=https://repo.continuum.io/miniconda
+ARG MC_URL=https://repo.anaconda.com/miniconda
 
 # Conda root
 ARG CONDA_VERSION=4.8.2
 ARG CONDA_BUILD_VERSION
 ARG CONDA_PACKAGES
 
-# Pipeline definition
+# Pipeline environment snapshot definition
 ARG SNAPSHOT_URL
-
 
 # Declare environment
 ENV OPT=/opt \
@@ -34,7 +33,8 @@ ENV PYTHONUNBUFFERED=1 \
     CONDA_PACKAGES=${CONDA_PACKAGES}
 
 # Toolchain
-RUN yum update -y && yum install -y \
+RUN yum update -y \
+    && yum install -y \
         bzip2-devel \
         curl \
         gcc \
@@ -63,7 +63,7 @@ RUN groupadd developer \
 
 # Install Miniconda
 # Reset permissions
-RUN curl -q -O ${MC_URL}/${MC_INSTALLER} \
+RUN curl -q -OSs ${MC_URL}/${MC_INSTALLER} \
     && bash ${MC_INSTALLER} -b -p ${MC_PATH} \
     && rm -rf ${MC_INSTALLER} \
     && echo export PATH="${MC_PATH}/bin:\${PATH}" > /etc/profile.d/conda.sh \
@@ -82,8 +82,8 @@ RUN conda config --set auto_update_conda false \
         conda=${CONDA_VERSION} \
         git \
         ${CONDA_PACKAGES} \
-    && curl -LO ${SNAPSHOT_URL} \
-    && conda env update -n base --file $(basename $SNAPSHOT_URL)
+    && curl -L -Ss ${SNAPSHOT_URL} -o ${HOME}/SNAPSHOT.yml \
+    && conda env update -n base --file ${HOME}/SNAPSHOT.yml
 
 WORKDIR ${HOME}
 
