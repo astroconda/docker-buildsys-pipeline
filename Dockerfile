@@ -3,15 +3,20 @@ FROM centos:6.9
 # Declare build-time environment
 
 # Miniconda
-ARG MC_VERSION=4.5.4
+ARG MC_BASE_PYTHON=py37
+ARG MC_VERSION=4.8.2
 ARG MC_PLATFORM=Linux
 ARG MC_ARCH=x86_64
 ARG MC_URL=https://repo.continuum.io/miniconda
 
 # Conda root
-ARG CONDA_VERSION=4.5.10
+ARG CONDA_VERSION=4.8.2
 ARG CONDA_BUILD_VERSION
 ARG CONDA_PACKAGES
+
+# Pipeline definition
+ARG SNAPSHOT_URL
+
 
 # Declare environment
 ENV OPT=/opt \
@@ -22,7 +27,7 @@ ENV PYTHONUNBUFFERED=1 \
     MC_PLATFORM=${MC_PLATFORM} \
     MC_ARCH=${MC_ARCH} \
     MC_URL=${MC_URL} \
-    MC_INSTALLER=Miniconda3-${MC_VERSION}-${MC_PLATFORM}-${MC_ARCH}.sh \
+    MC_INSTALLER=Miniconda3-${MC_BASE_PYTHON}_${MC_VERSION}-${MC_PLATFORM}-${MC_ARCH}.sh \
     MC_PATH=${OPT}/conda \
     CONDA_VERSION=${CONDA_VERSION} \
     CONDA_BUILD_VERSION=${CONDA_BUILD_VERSION} \
@@ -64,8 +69,6 @@ RUN curl -q -O ${MC_URL}/${MC_INSTALLER} \
     && echo export PATH="${MC_PATH}/bin:\${PATH}" > /etc/profile.d/conda.sh \
     && chown -R developer: ${OPT} ${HOME}
 
-# Pipeline definition
-ARG PIPELINE_URL
 
 # Configure Conda
 ENV PATH "${MC_PATH}/bin:${PATH}"
@@ -77,10 +80,10 @@ RUN conda config --set auto_update_conda false \
     && conda config --set rollback_enabled false \
     && conda install --yes --quiet \
         conda=${CONDA_VERSION} \
-        conda-build=${CONDA_BUILD_VERSION} \
         git \
         ${CONDA_PACKAGES} \
-    && conda install --file "${PIPELINE_URL}"
+    && curl -LO ${SNAPSHOT_URL} \
+    && conda env update -n base --file $(basename $SNAPSHOT_URL)
 
 WORKDIR ${HOME}
 
