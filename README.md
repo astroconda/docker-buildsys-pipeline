@@ -9,11 +9,11 @@ $ ./build [TAG] [Pipeline_snapshot_URL]
 
 i.e.
 ```
-$ ./build atodsat_RC1 https://ssb.stsci.edu/astroconda-releases/caldp/atodsat/latest-linux.yml
+$ ./build CALDP-atodsat-rc1 https://ssb.stsci.edu/astroconda-releases/caldp/20200421/latest-linux.yml
 
 ```
 
-For the RC1 delivery iteration of the not-yet-finalized 'atodsat' calibration environment delivery set.
+for the 20200421 final delivery iteration.
 
 Where:
 * `TAG` is the image tag to be appended to astroconda/buildsys-pipeline:
