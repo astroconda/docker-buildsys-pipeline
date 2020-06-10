@@ -19,5 +19,5 @@ Where:
 * `TAG` is the image tag to be appended to astroconda/buildsys-pipeline:
 * `Pipeline_snapshot_URL` is the URL where a published (H)CALDP delivery snapshot YAML file may be found.
 
-In-progress and finalized pipeline delivery snapshot definitions may be found here https://ssb.stsci.edu/astroconda-releases/caldp/
+In-progress and finalized pipeline delivery snapshot definitions may be found here https://github.com/astroconda/astroconda-releases/tree/master/caldp 
 
