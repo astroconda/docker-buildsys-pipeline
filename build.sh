@@ -6,12 +6,12 @@ if [[ ! $tag ]]; then
     exit 1
 fi
 
-url="$2"
-if [[ ! $url ]]; then
-    echo "No published snapshot URL specified."
+snapshot="$2"
+if [[ ! $snapshot ]]; then
+    echo "No snapshot file or URL specified."
     exit 1
 fi
 
 docker build \
     -t "astroconda/buildsys-pipeline:${tag}" \
-    --build-arg SNAPSHOT_URL="${url}" $(pwd)
+    --build-arg SNAPSHOT_INPUT="${snapshot}" $(pwd)

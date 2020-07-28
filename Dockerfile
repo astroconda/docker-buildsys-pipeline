@@ -15,7 +15,7 @@ ARG CONDA_BUILD_VERSION
 ARG CONDA_PACKAGES
 
 # Pipeline environment snapshot definition
-ARG SNAPSHOT_URL
+ARG SNAPSHOT_INPUT
 
 # Declare environment
 ENV OPT=/opt \
@@ -74,6 +74,8 @@ RUN curl -q -OSs ${MC_URL}/${MC_INSTALLER} \
 ENV PATH "${MC_PATH}/bin:${PATH}"
 USER developer
 
+ADD ${SNAPSHOT_INPUT} ${HOME}/SNAPSHOT.yml
+
 RUN conda config --set auto_update_conda false \
     && conda config --set always_yes true \
     && conda config --set quiet true \
@@ -82,7 +84,6 @@ RUN conda config --set auto_update_conda false \
         conda=${CONDA_VERSION} \
         git \
         ${CONDA_PACKAGES} \
-    && curl -L -Ss ${SNAPSHOT_URL} -o ${HOME}/SNAPSHOT.yml \
     && conda env update -n base --file ${HOME}/SNAPSHOT.yml
 
 WORKDIR ${HOME}
